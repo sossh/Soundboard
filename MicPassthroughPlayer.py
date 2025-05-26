@@ -71,7 +71,6 @@ class MicPassthroughPlayer(AudioPlayer):
     
     def virtualDeviceExists(self):
         '''Returns true if the virtual device is not None.'''
-        print("virtual device =", self.virtualDevice)
         return self.virtualDevice is not None
 
 

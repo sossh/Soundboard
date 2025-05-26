@@ -41,7 +41,8 @@ class SettingsManager():
     def getNumWelcomeMessages(self)->int:
         '''Returns the number of welcome messages stored in the settings file'''
         with open(self.SETTINGS_FILE_PATH, "r") as f:
-            return json.load(f)["numWelcomeMessages"]
+            return len(json.load(f)["welcome_messages"])
+        
         
     def getWelcomeMessage(self, index:int)->dict:
         '''Gets the welcome message at the specified index (indexes are 0 to n-1)'''

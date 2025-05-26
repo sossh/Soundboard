@@ -5,7 +5,6 @@
   ".png": "assets/Rajang_Icon.png"
  },
  "showWelcomeMessageOnStart": true,
- "numWelcomeMessages": 2,
  "welcome_messages": [
   {
    "image_path": "assets/messages/Welcome.png",
@@ -15,6 +14,10 @@
   {"image_path": "assets/messages/test.png",
    "title": "Setting up the Soundboard",
    "message": "To let others hear your soundboard audio:\n   (1) Open the app you're using (e.g., Discord, a game).\n   (2) Go to Audio Settings.\n   (3) Set your input device to: CABLE Input (VB-Audio Virtual Cable)"
+  },
+  {"image_path": "assets/messages/test.png",
+   "title": "Getting Sounds to Play",
+   "message": "The soundboard currently supports .wav files only (for now).\nYou can find sounds at websites like:\n  - yout.com (for YouTube)\n  - freesound.org"
   }
  ],
  "input_device": "default",

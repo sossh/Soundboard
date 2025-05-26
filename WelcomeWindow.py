@@ -59,7 +59,7 @@ class WelcomeWindow(customtkinter.CTkToplevel):
         self.goLeftBtn.grid(column = 0, row=0, sticky="W")
 
         self.bottomFrame.grid_columnconfigure(1, weight=1)
-        self.message = customtkinter.CTkLabel(self.bottomFrame, text="", wraplength=400, anchor="w", justify="left")
+        self.message = customtkinter.CTkLabel(self.bottomFrame, text="", width=400, wraplength=400, anchor="w", justify="left")
         self.message.grid(column = 1, row=0, padx=10)
 
         self.goRightBtn = customtkinter.CTkButton(self.bottomFrame, width=30, height=30, text="->", command=self._on_goRightBtn_press)
