@@ -1,0 +1,82 @@
+{
+"savedColors": [
+"#373bb8",
+"#3bdbdc",
+"#b23bff"
+],
+"numSounds": 12,
+"sounds": [
+{
+"name": "Erm what the Sigma",
+"filepath": "sounds/test.wav",
+"border_color": "#3bdbdc",
+"hover_color": "#1d6d6e"
+},
+{
+"name": "China",
+"filepath": "sounds/China.wav",
+"border_color": "#3bdbdc",
+"hover_color": "#1d6d6e"
+},
+{
+"name": "Yippieeeeee",
+"filepath": "sounds/Yippieeee.wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+},
+{
+"name": "Ling Gang Goo",
+"filepath": "sounds/Ling Gang Goo.wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+},
+{
+"name": "The Nether",
+"filepath": "sounds/The Nether.wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+},
+{
+"name": "AMONG US!!!!",
+"filepath": "sounds/AMONG US!!!!.wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+},
+{
+"name": "Chicken Jocky",
+"filepath": "sounds/Chicken Jocky.wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+},
+{
+"name": "Kung Fu Panda",
+"filepath": "sounds/Kung Fu Panda.wav",
+"border_color": "#3bdbdc",
+"hover_color": "#1d6d6e"
+},
+{
+"name": "Outro Music",
+"filepath": "sounds/Outro Music.wav",
+"border_color": "#b23bff",
+"hover_color": "#591d7f"
+},
+{
+"name": "Jamal Meme",
+"filepath": "sounds/Jamal Meme.wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+},
+{
+"name": "Im Jaking It",
+"filepath": "sounds/Im Jaking It.wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+},
+{
+"name": "Kanyes Best Song",
+"filepath": "sounds/Kanye West (Ye) - Heil Hitler (MUSIC VIDEO).wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+}
+]
+}
