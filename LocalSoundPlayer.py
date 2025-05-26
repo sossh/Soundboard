@@ -1,5 +1,5 @@
 import sounddevice as sd
-from numpy import zeros, pad
+from numpy import zeros, pad, column_stack
 from threading import Thread, Event
 from AudioPlayer import AudioPlayer
 
@@ -107,10 +107,15 @@ class LocalSoundPlayer(AudioPlayer):
                 self.stopSound()   # Stops audio from playing
                 data[:] = zeros((frames, data.shape[1]), dtype=data.dtype)
                 return             # Audio has stopped so leave early
-
-        
+            
+        # If the chunk isn't long enough pad with zeros
         if chunk.shape[0] < frames:
             chunk = pad(chunk, ((0, frames - chunk.shape[0]), (0, 0)), 'constant')
+
+        # If chunk is 1D (mono), duplicate it for stereo output
+        if chunk.ndim == 1:
+            chunk = column_stack([chunk, chunk])
+        
 
         data[:] = chunk * self.audioVolume
 

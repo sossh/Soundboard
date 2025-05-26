@@ -1,10 +1,8 @@
 {
 "savedColors": [
-"#373bb8",
-"#3bdbdc",
-"#b23bff"
+"#373bb8"
 ],
-"numSounds": 12,
+"numSounds": 14,
 "sounds": [
 {
 "name": "Erm what the Sigma",
@@ -75,6 +73,18 @@
 {
 "name": "Kanyes Best Song",
 "filepath": "sounds/Kanye West (Ye) - Heil Hitler (MUSIC VIDEO).wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+},
+{
+"name": "Explosion",
+"filepath": "sounds/235968__tommccann__explosion_01.wav",
+"border_color": "#373bb8",
+"hover_color": "#1b1d5c"
+},
+{
+"name": "Pop",
+"filepath": "sounds/202230__deraj__pop-sound.wav",
 "border_color": "#373bb8",
 "hover_color": "#1b1d5c"
 }
