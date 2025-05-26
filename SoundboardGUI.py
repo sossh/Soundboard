@@ -21,21 +21,21 @@ customtkinter.set_appearance_mode("dark")  # Modes: "System" (standard), "Dark",
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 class SoundboardGUI(customtkinter.CTk):
-    def __init__(self):
+    def __init__(self, configFilePath, soundsFilePath):
         super().__init__()
 
         # Init Constants
-        self.CONFIG_FILE_PATH = "config.json" # The file that contains the data for SettingsManager.
-        self.AUDIO_FILE_PATH  = "sounds.json" # The file that contains the data for SoundManager.
-        self.AUDIO_FOLDER_PATH = "sounds/"
-        self.BUTTON_WIDTH = 140               # The Default width of a audio button. Does not respect this as max size so dont always belive this.
-        self.RIGHT_FRAME_WIDTH = 900          # The Default width of the right frame.
-        self.AP_BUTTON_COLOUR = "#1f6aa5"   # The color the audio players button will be
+        self.CONFIG_FILE_PATH = configFilePath # The file that contains the data for SettingsManager.
+        self.AUDIO_FILE_PATH  = soundsFilePath # The file that contains the data for SoundManager.
+        #self.AUDIO_FOLDER_PATH = "_internal/sounds/"
+        self.BUTTON_WIDTH = 140                # The Default width of a audio button. Does not respect this as max size so dont always belive this.
+        self.RIGHT_FRAME_WIDTH = 900           # The Default width of the right frame.
+        self.AP_BUTTON_COLOUR = "#1f6aa5"    # The color the audio players button will be
 
         ## Init Settings and Sound Manager ##
         self.settingsManager = SettingsManager(self.CONFIG_FILE_PATH)
         self.hotkeyManager = HotkeyManager()
-        self.soundManager = SoundManager(self.AUDIO_FILE_PATH, self.AUDIO_FOLDER_PATH)
+        self.soundManager = SoundManager(self.AUDIO_FILE_PATH)
 
         # Get the Audio Devices we will use
         self.inputDevice = self.settingsManager.getInputDeviceName()
@@ -62,7 +62,7 @@ class SoundboardGUI(customtkinter.CTk):
         self.update_interval = int(1000 / self.fps)
         self.update_id = self.after(self.update_interval, self.updateGUI)
 
-        # Wait a seccond for Widgets to populate.
+        # Wait a little for Widgets to populate.
         self.after(10,self._displaySounds)
 
         # Init Hotkeys
@@ -133,7 +133,7 @@ class SoundboardGUI(customtkinter.CTk):
         # Create volume slider frame
         self.volumeFrame = customtkinter.CTkFrame(self.audioPlayerFrame, fg_color="transparent")
         self.volumeFrame.grid(row=2, column=0, pady=(30, 5), sticky="nsew")
-        self.volumeIconImage = customtkinter.CTkImage(light_image=Image.open("assets/volume.PNG"),dark_image=Image.open("assets/volume.PNG"),size=(30, 30))
+        self.volumeIconImage = customtkinter.CTkImage(light_image=Image.open(self.settingsManager.getImagePath("volume.PNG")),dark_image=Image.open(self.settingsManager.getImagePath("volume.PNG")),size=(30, 30))
         self.volumeIconLabel = customtkinter.CTkLabel(self.volumeFrame, image=self.volumeIconImage, text="")
         self.volumeIconLabel.grid(row=0, column=0, padx=(10, 0), sticky="nsew")
         self.volumeSlider = customtkinter.CTkSlider(self.volumeFrame, from_=0, to=1, number_of_steps=100)
@@ -145,7 +145,7 @@ class SoundboardGUI(customtkinter.CTk):
         self.loopFrame = customtkinter.CTkFrame(self.audioPlayerFrame, fg_color="transparent")
         self.loopFrame.grid(row=3, column=0, pady=(5, 5), sticky="nsew")
         self.loopFrame.grid_columnconfigure(2, weight=1)
-        self.loopImage = customtkinter.CTkImage(light_image=Image.open("assets/loop.PNG"),dark_image=Image.open("assets/loop.PNG"),size=(30, 30))
+        self.loopImage = customtkinter.CTkImage(light_image=Image.open(self.settingsManager.getImagePath("loop.PNG")),dark_image=Image.open(self.settingsManager.getImagePath("loop.PNG")),size=(30, 30))
         self.loopIconLabel = customtkinter.CTkLabel(self.loopFrame, image=self.loopImage, text="")
         self.loopIconLabel.grid(row=0, column=0,padx=(10, 0),pady=(5, 5))
         self.loopSwitch = customtkinter.CTkSwitch(self.loopFrame, text="", command=self._setLoop, state="disabled", onvalue="on", offvalue="off")
@@ -159,7 +159,7 @@ class SoundboardGUI(customtkinter.CTk):
         # Create delete audio frame(the button that lets you delete an audio)
         self.deleteButtonFrame = customtkinter.CTkFrame(self.menuFrame, fg_color="transparent")
         self.deleteButtonFrame.grid(row=0, column=0, pady=(0, 5), sticky="nsew")
-        self.deleteImage = customtkinter.CTkImage(light_image=Image.open("assets/trash.png"),dark_image=Image.open("assets/trash.png"),size=(30, 30))
+        self.deleteImage = customtkinter.CTkImage(light_image=Image.open(self.settingsManager.getImagePath("trash.PNG")),dark_image=Image.open(self.settingsManager.getImagePath("trash.PNG")),size=(30, 30))
         self.deleteIconLabel = customtkinter.CTkLabel(self.deleteButtonFrame, image=self.deleteImage, text="")
         self.deleteIconLabel.grid(row=0, column=0,padx=(10, 0),pady=(5, 5))
         self.deleteBtn = customtkinter.CTkButton(self.deleteButtonFrame, text="Delete", command=self._deleteAudio,width=70,fg_color="transparent",border_width=2, border_color=self.AP_BUTTON_COLOUR)
@@ -168,7 +168,7 @@ class SoundboardGUI(customtkinter.CTk):
         # Create the Edit button
         self.editButtonFrame = customtkinter.CTkFrame(self.menuFrame, fg_color="transparent")
         self.editButtonFrame.grid(row=0, column=2, pady=(0, 5), sticky="nsew")
-        self.editImage = customtkinter.CTkImage(light_image=Image.open("assets/edit.png"),dark_image=Image.open("assets/edit.png"),size=(30, 30))
+        self.editImage = customtkinter.CTkImage(light_image=Image.open(self.settingsManager.getImagePath("edit.PNG")),dark_image=Image.open(self.settingsManager.getImagePath("edit.PNG")),size=(30, 30))
         self.editIconLabel = customtkinter.CTkLabel(self.editButtonFrame, image=self.editImage, text="")
         self.editIconLabel.grid(row=0, column=0,padx=(10, 0),pady=(5, 5),sticky="e")
         self.editBtn = customtkinter.CTkButton(self.editButtonFrame, text="Edit", command=self._editAudio,width=70,fg_color="transparent",border_width=2, border_color=self.AP_BUTTON_COLOUR)
@@ -178,7 +178,7 @@ class SoundboardGUI(customtkinter.CTk):
         self.settingsButtonFrame = customtkinter.CTkFrame(self.menuFrame, fg_color="transparent")
         self.settingsButtonFrame.grid(row=1, column=0, pady=(0, 5), sticky="nsew")
 
-        self.settingsImage = customtkinter.CTkImage(light_image=Image.open("assets/settings.png"),dark_image=Image.open("assets/settings.png"),size=(30, 30))
+        self.settingsImage = customtkinter.CTkImage(light_image=Image.open(self.settingsManager.getImagePath("settings.PNG")),dark_image=Image.open(self.settingsManager.getImagePath("settings.PNG")),size=(30, 30))
         self.settingsIconLabel = customtkinter.CTkLabel(self.settingsButtonFrame, image=self.settingsImage, text="")
         self.settingsIconLabel.grid(row=0, column=0,padx=(10, 0),pady=(20, 5),sticky="w")
         self.settingsBtn = customtkinter.CTkButton(self.settingsButtonFrame, text="Settings", command=self._openSettingsMenu,width=70,fg_color="transparent",border_width=2, border_color=['#a2a2a2', "#7c7c7c"], hover_color=['#7c7c7c', '#565656'])
@@ -187,7 +187,7 @@ class SoundboardGUI(customtkinter.CTk):
         # Create the Help And Anouncements Button
         self.helpButtonFrame = customtkinter.CTkFrame(self.menuFrame, fg_color="transparent")
         self.helpButtonFrame.grid(row=1, column=2, pady=(0, 5), sticky="nsew")
-        self.helpImage = customtkinter.CTkImage(light_image=Image.open("assets/help.png"),dark_image=Image.open("assets/help.png"),size=(30, 30))
+        self.helpImage = customtkinter.CTkImage(light_image=Image.open(self.settingsManager.getImagePath("help.PNG")),dark_image=Image.open(self.settingsManager.getImagePath("help.PNG")),size=(30, 30))
         self.helpIconLabel = customtkinter.CTkLabel(self.helpButtonFrame, image=self.helpImage, text="")
         self.helpIconLabel.grid(row=0, column=0,padx=(10, 0),pady=(20, 5),sticky="e")
         self.helpBtn = customtkinter.CTkButton(self.helpButtonFrame, text="Help", command=self._openHelpAnouncmentsMenu,width=70,fg_color="transparent",border_width=2, border_color=['#a2a2a2', "#7c7c7c"], hover_color=['#7c7c7c', '#565656'])

@@ -1,21 +1,24 @@
 {
  "app_title": "Sossh Soundboard",
+ "assets_folder_path": "assets/",
  "icon_path": {
-  ".ico": "assets/Rajang_Icon.ico",
-  ".png": "assets/Rajang_Icon.png"
+  ".ico": "Rajang_Icon.ico",
+  ".png": "Rajang_Icon.png"
  },
- "showWelcomeMessageOnStart": true,
+ "showWelcomeMessageOnStart": false,
  "welcome_messages": [
   {
-   "image_path": "assets/messages/Welcome.png",
+   "image_path": "messages/Welcome.png",
    "title": "Welcome to Sossh Soundboard",
    "message": "This application lets you play audio through your microphone, allowing others in your voice chats, games, or meetings to hear the sounds you choose to play. Click the arrow button for usage instructions."
   },
-  {"image_path": "assets/messages/test.png",
+  {
+   "image_path": "messages/test.png",
    "title": "Setting up the Soundboard",
    "message": "To let others hear your soundboard audio:\n   (1) Open the app you're using (e.g., Discord, a game).\n   (2) Go to Audio Settings.\n   (3) Set your input device to: CABLE Input (VB-Audio Virtual Cable)"
   },
-  {"image_path": "assets/messages/test.png",
+  {
+   "image_path": "messages/test.png",
    "title": "Getting Sounds to Play",
    "message": "The soundboard currently supports .wav files only (for now).\nYou can find sounds at websites like:\n  - yout.com (for YouTube)\n  - freesound.org"
   }

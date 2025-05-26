@@ -2,14 +2,27 @@ import json
 import os
 from shutil import copyfile
 from Sound import Sound
+from time import sleep
 
 class SoundManager:
 
-    def __init__(self, soundFilePath, soundFolderPath):
+    def __init__(self, soundFilePath):
         self.SOUND_FILE_PATH = soundFilePath
-        self.SOUNDS_FOLDER_PATH = soundFolderPath
+        self.SOUNDS_FOLDER_PATH = None
+        self.SOUNDS_FOLDER_PATH = self.getSoundsFolderPath()
         self.ACCEPTED_FILE_FORMATS = ".wav"
         self.JSON_INDENTS = 0
+
+    def getSoundsFolderPath(self):
+        
+        if self.SOUNDS_FOLDER_PATH is None:
+            with open(self.SOUND_FILE_PATH, "r") as f:
+                
+                self.SOUNDS_FOLDER_PATH = json.load(f)["sounds_folder_path"]
+                return self.SOUNDS_FOLDER_PATH
+        else:
+            
+            return self.SOUNDS_FOLDER_PATH
 
     def getAllSounds(self):
         '''Returns a list of all sounds in the soundsFile'''
@@ -21,8 +34,8 @@ class SoundManager:
             # Add all sounds to the list
             for index, sound in enumerate(soundsData):
                 # Make sure the file actually exists before adding it
-                if(self.fileExists(sound["filepath"])):
-                    soundList.append(Sound(sound["name"], sound["filepath"], index, sound["border_color"], sound["hover_color"]))
+                if(self.fileExists(self.getSoundsFolderPath() + sound["filepath"])):
+                    soundList.append(Sound(sound["name"], self.getSoundsFolderPath()+sound["filepath"], index, sound["border_color"], sound["hover_color"]))
 
         return soundList
     
@@ -46,9 +59,9 @@ class SoundManager:
                 if((filterLower in sound["name"].lower() or 
                     filterLower == sound["border_color"].lower() or 
                     filterLower == sound["border_color"][1:].lower()) and
-                    self.fileExists(sound["filepath"])):
+                    self.fileExists(self.getSoundsFolderPath()+sound["filepath"])):
 
-                    soundList.append(Sound(sound["name"], sound["filepath"], index, sound["border_color"], sound["hover_color"]))
+                    soundList.append(Sound(sound["name"], self.getSoundsFolderPath()+sound["filepath"], index, sound["border_color"], sound["hover_color"]))
 
         return soundList
     
@@ -59,8 +72,8 @@ class SoundManager:
 
             if(index<=len(soundsData)): 
                 # Build and return a sound object
-                if(self.fileExists(soundsData[index]['filepath'])):
-                    return Sound(soundsData[index]['name'], soundsData[index]['filepath'], index, soundsData[index]["border_color"], soundsData[index]["hover_color"])
+                if(self.fileExists(self.getSoundsFolderPath()+soundsData[index]['filepath'])):
+                    return Sound(soundsData[index]['name'], self.getSoundsFolderPath()+soundsData[index]['filepath'], index, soundsData[index]["border_color"], soundsData[index]["hover_color"])
         
         # If that index isn't in the sound file then return none
         return None
@@ -72,10 +85,10 @@ class SoundManager:
 
             # Find the sound
             for index, sound in enumerate(soundsData):
-                if sound["filepath"] == path:
+                if self.getSoundsFolderPath()+sound["filepath"] == path:
                     # Build and return a sound object
-                    if(self.fileExists(sound["filepath"])):
-                        return Sound(sound["name"], sound["filepath"], index, sound["border_color"], sound["hover_color"])
+                    if(self.fileExists(self.getSoundsFolderPath()+sound["filepath"])):
+                        return Sound(sound["name"], self.getSoundsFolderPath()+sound["filepath"], index, sound["border_color"], sound["hover_color"])
                     
                     break
                 
@@ -126,11 +139,11 @@ class SoundManager:
             return 'The file is not in a accepted format '+self.ACCEPTED_FILE_FORMATS+'.'
         
         # Make sure border col is valid
-        if(len(borderCol) != 7 and borderCol[0] != "#"):
+        if(len(borderCol) != 7 or borderCol[0] != "#"):
             return "The color set is not valid."
         
         # Make sure hover col is valid
-        if(len(hoverCol) != 7 and hoverCol[0] != "#"):
+        if(len(hoverCol) != 7 or hoverCol[0] != "#"):
             return "The color set is not valid."
         
         return ""
@@ -145,7 +158,7 @@ class SoundManager:
         filename = os.path.basename(path)
         filename = filename.encode("ascii", "ignore").decode()
 
-        # Make sure the file exists
+        # Make sure the file to import exists
         if(not self.fileExists(path)):
             return 'The file at "'+path+'" does not exist, so no audio was created.'
         
@@ -174,6 +187,7 @@ class SoundManager:
 
         # Get Audio Data before we delete it
         path = sound.getPath()
+        path = path.encode("ascii", "ignore").decode()
         index = sound.getIndex()
 
         # Check for validity
@@ -208,6 +222,7 @@ class SoundManager:
 
     def fileExists(self, fileName) -> bool:
         '''Returns true if there is a file at the given path'''
+        print(fileName)
         return os.path.isfile(fileName)
     
     def soundExists(self, sound:Sound) -> bool:
@@ -248,9 +263,9 @@ class SoundManager:
 
         # Add it to the audio file
         if(index >=0 and index < self.getNumSounds()):
-            data["sounds"].insert(index, {"name":title, "filepath":self.SOUNDS_FOLDER_PATH+filename, "border_color":borderCol, "hover_color":hoverCol})
+            data["sounds"].insert(index, {"name":title, "filepath":filename, "border_color":borderCol, "hover_color":hoverCol})
         else:
-            data["sounds"].append({"name":title, "filepath":self.SOUNDS_FOLDER_PATH+filename, "border_color":borderCol, "hover_color":hoverCol})
+            data["sounds"].append({"name":title, "filepath":filename, "border_color":borderCol, "hover_color":hoverCol})
         
 
         # Update the Number of sounds in the file

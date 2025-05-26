@@ -86,7 +86,7 @@ class WelcomeWindow(customtkinter.CTkToplevel):
         if(index >= 0 and index < self.numMessages):
             message = self.settingsManager.getWelcomeMessage(index)
 
-            messageImage = customtkinter.CTkImage(size=self.MESSAGE_IMAGE_SIZE, light_image=Image.open(message["image_path"]),dark_image=Image.open(message["image_path"]))
+            messageImage = customtkinter.CTkImage(size=self.MESSAGE_IMAGE_SIZE, light_image=Image.open(self.settingsManager.getAssetFolderPath()+message["image_path"]),dark_image=Image.open(self.settingsManager.getAssetFolderPath()+message["image_path"]))
             self.messageImageLabel.configure(require_redraw=True, image=messageImage)
 
             self.message.configure(text=message["message"])

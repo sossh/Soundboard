@@ -6,8 +6,17 @@ class SettingsManager():
     def __init__(self, settingsFilePath):
         self.SETTINGS_FILE_PATH = settingsFilePath
         self.JSON_INDENTS = 1
+        self.ASSETS_FOLDER_PATH = None
+        self.ASSETS_FOLDER_PATH = self.getAssetFolderPath()
 
 #====================== Settings Getter Methods =====================#
+    def getAssetFolderPath(self):
+        if(self.ASSETS_FOLDER_PATH is None):
+            with open(self.SETTINGS_FILE_PATH, "r") as f:
+                return json.load(f)["assets_folder_path"]
+        else:
+            return self.ASSETS_FOLDER_PATH
+        
     def getInputDeviceName(self)->str:
         '''Get the name of the input device in the settings file.'''
         with open(self.SETTINGS_FILE_PATH, "r") as f:
@@ -36,7 +45,7 @@ class SettingsManager():
         '''Get the apps icon path in the specified format, ex: (.ico, .png)'''
         with open(self.SETTINGS_FILE_PATH, "r") as f:
             configData = json.load(f)            
-            return configData["icon_path"][fileFormat]
+            return self.ASSETS_FOLDER_PATH + configData["icon_path"][fileFormat]
         
     def getNumWelcomeMessages(self)->int:
         '''Returns the number of welcome messages stored in the settings file'''
@@ -58,6 +67,11 @@ class SettingsManager():
         '''Gets the hotkey for toggling audio'''
         with open(self.SETTINGS_FILE_PATH, "r") as f:
             return json.load(f)["hotkeys"][type]
+        
+    def getImagePath(self, imageName)->str:
+        '''Returns the path to an image stored in the assets folder'''
+        with open(self.SETTINGS_FILE_PATH, "r") as f:
+            return self.ASSETS_FOLDER_PATH + imageName
         
     
     
@@ -111,6 +125,8 @@ class SettingsManager():
 
         with open(self.SETTINGS_FILE_PATH, "w") as f:
             json.dump(configData, f, indent=self.JSON_INDENTS)
+
+    
             
 
 
@@ -137,5 +153,8 @@ class SettingsManager():
 
         return deviceList
     
-    
+
+   
+
+   
 
