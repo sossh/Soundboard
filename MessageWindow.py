@@ -14,12 +14,14 @@ class MessageWindow(customtkinter.CTkToplevel):
         self.settingsManager = settingsManager
         
         # Setup the Window
-        self.attributes("-topmost", True)
+        
         self.title("")
         self.wm_iconbitmap(self.settingsManager.getAppIconPath(".ico"))
         self.iconphoto(True,PhotoImage(file = self.settingsManager.getAppIconPath(".png")))
-        self.focus()
         self.protocol("WM_DELETE_WINDOW", self._on_close) # set the function that happens when the window is closed
+        self.lift()
+        self.attributes('-topmost', True)
+        self.focus()
 
         # Display the message
         self.messageLabel = customtkinter.CTkLabel(self, text=message)

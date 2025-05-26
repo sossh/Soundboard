@@ -14,7 +14,8 @@
   },
   {"image_path": "assets/messages/test.png",
    "title": "Setting up the Soundboard",
-   "message": "To let others hear your soundboard audio:\n   (1) Open the app you're using (e.g., Discord, a game).\n   (2) Go to Audio Settings.\n   (3) Set your input device to: CABLE Input (VB-Audio Virtual Cable)"}
+   "message": "To let others hear your soundboard audio:\n   (1) Open the app you're using (e.g., Discord, a game).\n   (2) Go to Audio Settings.\n   (3) Set your input device to: CABLE Input (VB-Audio Virtual Cable)"
+  }
  ],
  "input_device": "default",
  "output_device": "default",

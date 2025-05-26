@@ -64,16 +64,16 @@ class SoundboardGUI(customtkinter.CTk):
         # Wait a seccond for Widgets to populate.
         self.after(10,self._displaySounds)
 
+        # Init Hotkeys
+        self._initHotkeys()
+
         # Check if we should display the help and anouncements window
         if(self.settingsManager.getShowMessageOnStartup()):
             WelcomeWindow(self, self.settingsManager)
 
-        # Init Hotkeys
-        self._initHotkeys()
-
         # Check if the Virtual Device Exists.
         if(not self.soundPlayer.virtualDeviceExists()):
-            self._displayMessageWindow("Audio Device not found: Cable Input (VB-Audio Virtual Cable)")
+            MessageWindow(self, self.settingsManager, "Audio Device not found: Cable Input (VB-Audio Virtual Cable)")
         
         
 
@@ -85,6 +85,9 @@ class SoundboardGUI(customtkinter.CTk):
         self.title(self.settingsManager.getAppTitle())
         self.protocol("WM_DELETE_WINDOW", self._closeApp)
         self.wm_iconbitmap(self.settingsManager.getAppIconPath(".ico"))
+        self.lift()
+        self.attributes('-topmost', True)
+        self.after(0, lambda: self.attributes('-topmost', False))
 
         self.grid_rowconfigure(0, weight=1)     # Allow both to stretch vertically
         self.grid_columnconfigure(0, weight=0)  # Set so audioPlayerFrame, doesn't horizontally
@@ -425,9 +428,6 @@ class SoundboardGUI(customtkinter.CTk):
         # Open the window
         WelcomeWindow(self, self.settingsManager)
     
-    def _displayMessageWindow(self, message:str):
-        '''Display a message to a new window'''
-        MessageWindow(self, self.settingsManager, message)
 
         
 

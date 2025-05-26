@@ -28,7 +28,9 @@ class SettingsGUI(customtkinter.CTkToplevel):
         self.focus()
         self.protocol("WM_DELETE_WINDOW", self._on_close) # set the function that happens when the window is closed
         self.title("Settings")
-        self.attributes("-topmost", True)
+        self.lift()
+        self.attributes('-topmost', True)
+        self.after(0, lambda: self.attributes('-topmost', False))
 
         # Wait for the window to display, then set as the only useable window
         # Note: this is technically a bug as the user has 10ms to fuck shit up, but idgaf

@@ -33,11 +33,13 @@ class WelcomeWindow(customtkinter.CTkToplevel):
 
     def _setupWindow(self):
         # Setup the Window
-        self.attributes("-topmost", True)
         self.title("Help and Announcements")
         self.wm_iconbitmap(self.settingsManager.getAppIconPath(".ico"))
         self.iconphoto(True,PhotoImage(file = self.settingsManager.getAppIconPath(".png")))
         self.focus()
+        self.lift()
+        self.attributes('-topmost', True)
+        self.after(0, lambda: self.attributes('-topmost', False))
 
     def _setupWidgets(self):
 
