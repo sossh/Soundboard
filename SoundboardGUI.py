@@ -27,6 +27,7 @@ class SoundboardGUI(customtkinter.CTk):
         # Init Constants
         self.CONFIG_FILE_PATH = "config.json" # The file that contains the data for SettingsManager.
         self.AUDIO_FILE_PATH  = "sounds.json" # The file that contains the data for SoundManager.
+        self.AUDIO_FOLDER_PATH = "sounds/"
         self.BUTTON_WIDTH = 140               # The Default width of a audio button. Does not respect this as max size so dont always belive this.
         self.RIGHT_FRAME_WIDTH = 900          # The Default width of the right frame.
         self.AP_BUTTON_COLOUR = "#1f6aa5"   # The color the audio players button will be
@@ -34,7 +35,7 @@ class SoundboardGUI(customtkinter.CTk):
         ## Init Settings and Sound Manager ##
         self.settingsManager = SettingsManager(self.CONFIG_FILE_PATH)
         self.hotkeyManager = HotkeyManager()
-        self.soundManager = SoundManager(self.AUDIO_FILE_PATH)
+        self.soundManager = SoundManager(self.AUDIO_FILE_PATH, self.AUDIO_FOLDER_PATH)
 
         # Get the Audio Devices we will use
         self.inputDevice = self.settingsManager.getInputDeviceName()

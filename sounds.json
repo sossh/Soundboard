@@ -77,14 +77,14 @@
 "hover_color": "#1b1d5c"
 },
 {
-"name": "Explosion",
-"filepath": "sounds/235968__tommccann__explosion_01.wav",
+"name": "Pop",
+"filepath": "sounds/202230__deraj__pop-sound.wav",
 "border_color": "#373bb8",
 "hover_color": "#1b1d5c"
 },
 {
-"name": "Pop",
-"filepath": "sounds/202230__deraj__pop-sound.wav",
+"name": "Explosion",
+"filepath": "sounds/235968__tommccann__explosion_01.wav",
 "border_color": "#373bb8",
 "hover_color": "#1b1d5c"
 }

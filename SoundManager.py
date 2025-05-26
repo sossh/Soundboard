@@ -5,8 +5,9 @@ from Sound import Sound
 
 class SoundManager:
 
-    def __init__(self, soundFilePath):
+    def __init__(self, soundFilePath, soundFolderPath):
         self.SOUND_FILE_PATH = soundFilePath
+        self.SOUNDS_FOLDER_PATH = soundFolderPath
         self.ACCEPTED_FILE_FORMATS = ".wav"
         self.JSON_INDENTS = 0
 
@@ -150,7 +151,7 @@ class SoundManager:
         
 
         # Make sure no no sound with the filename currently exists
-        if(self.fileExists("sounds/"+filename)):
+        if(self.fileExists(self.SOUNDS_FOLDER_PATH+filename)):
             return 'A Sound with the filename "'+filename+'" already exits in the soundboard.'
         
         # Make sure the file is a .wav
@@ -220,7 +221,7 @@ class SoundManager:
     def filenameTaken(self, filename:str) -> bool:
         '''Returns true if an audio with a certain file name already exists in the sounds file'''
 
-        filepath = "sounds/"+filename
+        filepath = str(self.SOUNDS_FOLDER_PATH+filename)
         for toCompare in self.getAllSounds():
             if(filepath == toCompare.getPath()):
                 return True
@@ -237,8 +238,8 @@ class SoundManager:
         filename = filename.encode("ascii", "ignore").decode()
         
         # Move the file to the sounds folder if they are not the same
-        if(path != "sounds/"+filename):
-            copyfile(path,"sounds/"+filename)
+        if(path != self.SOUNDS_FOLDER_PATH+filename):
+            copyfile(path,self.SOUNDS_FOLDER_PATH+filename)
 
         # Add the sound to the sounds file
         with open(self.SOUND_FILE_PATH, "r") as f:
@@ -247,9 +248,9 @@ class SoundManager:
 
         # Add it to the audio file
         if(index >=0 and index < self.getNumSounds()):
-            data["sounds"].insert(index, {"name":title, "filepath":"sounds/"+filename, "border_color":borderCol, "hover_color":hoverCol})
+            data["sounds"].insert(index, {"name":title, "filepath":self.SOUNDS_FOLDER_PATH+filename, "border_color":borderCol, "hover_color":hoverCol})
         else:
-            data["sounds"].append({"name":title, "filepath":"sounds/"+filename, "border_color":borderCol, "hover_color":hoverCol})
+            data["sounds"].append({"name":title, "filepath":self.SOUNDS_FOLDER_PATH+filename, "border_color":borderCol, "hover_color":hoverCol})
         
 
         # Update the Number of sounds in the file
