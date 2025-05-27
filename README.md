@@ -20,8 +20,7 @@ Before installing this app, you must install **VB-CABLE**, which is used for rou
 
 ### 2. Download and Install This App
 
-1. Go to the project's GitHub repository: [**GitHub Repository**](your-link-here)
-2. Click the **"Releases"** tab.
-3. Download the latest `.zip` file under **Assets** (e.g., `YourApp-v1.0.0.zip`).
-4. Extract the contents to any folder on your computer (e.g., Desktop or `C:\Apps\YourApp`).
-5. Double-click `YourApp.exe` to launch the app.
+1. Go to the project's GitHub repository: [**GitHub Repository**](https://github.com/sossh/Soundboard/blob/main/Releases/)
+2. Download the latest `.zip` file under **Assets** (e.g., `YourApp-v1.0.0.zip`).
+3. Extract the contents to any folder on your computer (e.g., Desktop or `C:\Apps\YourApp`).
+4. Double-click `YourApp.exe` to launch the app.
