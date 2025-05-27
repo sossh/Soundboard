@@ -1,5 +1,5 @@
 import sounddevice as sd
-from numpy import pad, repeat
+from numpy import pad, repeat, column_stack
 from threading import Thread, Event
 from AudioPlayer import AudioPlayer
 
@@ -137,6 +137,10 @@ class MicPassthroughPlayer(AudioPlayer):
 
             # Change the volume of the output
             chunk = chunk * self.audioVolume
+
+            # If chunk is 1D (mono), duplicate it for stereo output
+            if chunk.ndim == 1:
+                chunk = column_stack([chunk, chunk])
 
             # Mix sound and mic half and half
             output = 0.5 * mic_chunk + 0.5 * chunk
