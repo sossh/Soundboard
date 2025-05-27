@@ -10,8 +10,11 @@ class WelcomeWindow(customtkinter.CTkToplevel):
 
         # Call Super Constructor
         super().__init__(master)
+        super().iconphoto(True,PhotoImage(file=settingsManager.getAppIconPath(".png")))
 
         # Init Constants
+        self.WINDOW_WIDTH = 550
+        self.WINDOW_HEIGHT = 450
         self.MESSAGE_IMAGE_SIZE = (480,270)
         self.TITLE = "Help and Announcements"
 
@@ -22,8 +25,10 @@ class WelcomeWindow(customtkinter.CTkToplevel):
         
         # Only create the window if we have messages to display.
         if(self.numMessages > 0):
+            
             self._setupWindow()
             self._setupWidgets()
+            self._resizeWindow()
 
             
             self._setMessage(self.currPage)
@@ -32,14 +37,20 @@ class WelcomeWindow(customtkinter.CTkToplevel):
 
 
     def _setupWindow(self):
+
         # Setup the Window
         self.title("Help and Announcements")
-        self.wm_iconbitmap(self.settingsManager.getAppIconPath(".ico"))
-        self.iconphoto(True,PhotoImage(file = self.settingsManager.getAppIconPath(".png")))
+        self.iconphoto(True,PhotoImage(file=self.settingsManager.getAppIconPath(".png")))
         self.focus()
         self.lift()
         self.attributes('-topmost', True)
         self.after(0, lambda: self.attributes('-topmost', False))
+
+    def _resizeWindow(self):
+        '''Resize the window after all widgets have been inited'''
+        self.geometry(f"{self.WINDOW_WIDTH}x{self.WINDOW_HEIGHT}")
+        
+
 
     def _setupWidgets(self):
 
@@ -80,6 +91,7 @@ class WelcomeWindow(customtkinter.CTkToplevel):
 
 
     def _setMessage(self, currPage:int):
+        '''Set the page to the page number you want (indexes are 1-n)'''
 
         index = currPage-1
 
@@ -111,7 +123,7 @@ class WelcomeWindow(customtkinter.CTkToplevel):
         
     def _on_goRightBtn_press(self):
         '''Go right 1 page and display the message on that page.'''
-
+        
         # Go right 1 page
         oldPage = self.currPage
         self.currPage = (self.currPage) % self.numMessages + 1

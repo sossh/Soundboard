@@ -1,8 +1,8 @@
 import json
-import os
+from os import remove, path as osPath
 from shutil import copyfile
 from Sound import Sound
-from time import sleep
+
 
 class SoundManager:
 
@@ -121,13 +121,13 @@ class SoundManager:
 
         if(deleteFile):
             # Remove the actual sound file from the folder
-            os.remove(sound.getPath())
+            remove(sound.getPath())
 
     def isValidEditAudio(self, title:str, path:str, borderCol:str, hoverCol:str):
         '''Returns "" empty string if a audio with theses valuses is valid, if it is invalid returns an error message.'''
 
         # Get the file name and remove all non-ascii
-        filename = os.path.basename(path)
+        filename = osPath.basename(path)
         filename = filename.encode("ascii", "ignore").decode()
 
         # Make sure the file exists
@@ -155,7 +155,7 @@ class SoundManager:
         '''Returns "" empty string if a audio with theses valuses is valid, if it is invalid returns an error message.'''
 
         # Get the file name and remove all non-ascii
-        filename = os.path.basename(path)
+        filename = osPath.basename(path)
         filename = filename.encode("ascii", "ignore").decode()
 
         # Make sure the file to import exists
@@ -223,7 +223,7 @@ class SoundManager:
     def fileExists(self, fileName) -> bool:
         '''Returns true if there is a file at the given path'''
         print(fileName)
-        return os.path.isfile(fileName)
+        return osPath.isfile(fileName)
     
     def soundExists(self, sound:Sound) -> bool:
         '''Returns True if the sound exists in the soundsFile'''
@@ -249,7 +249,7 @@ class SoundManager:
         '''Adds an audio with the given parameters, without checking for validity, CHECK SOMEWHERE ELSE!'''
   
         # Get the file name and remove all non-ascii
-        filename = os.path.basename(path)
+        filename = osPath.basename(path)
         filename = filename.encode("ascii", "ignore").decode()
         
         # Move the file to the sounds folder if they are not the same

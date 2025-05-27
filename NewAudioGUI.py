@@ -16,6 +16,8 @@ class NewAudioGUI(customtkinter.CTkToplevel):
         
 
         # Constants
+        self.WINDOW_WIDTH = 600
+        self.WINDOW_HEIGHT = 500
         self.HOVER_COLOR_MULTIPLIER=0.5         # The amount we tint a color on hover
         self.DEFAULT_AUDIO_COLOR="#373bb8"      # The default color widgets are INITed to on startup
 
@@ -32,6 +34,7 @@ class NewAudioGUI(customtkinter.CTkToplevel):
         self._setupDoneButton()
 
         self._setupDefaultWidgetColors()
+        self._resizeWindow()
 
 
 
@@ -49,6 +52,10 @@ class NewAudioGUI(customtkinter.CTkToplevel):
         # Wait for the window to display, then set as the only useable window
         # Note: this is technically a bug as the user has 10ms to fuck shit up, but idgaf
         self.after(10, self.grab_set)
+
+    def _resizeWindow(self):
+        '''Resize the window'''
+        self.geometry(f"{self.WINDOW_WIDTH}x{self.WINDOW_HEIGHT}")
 
         
     def _setupTabs(self):
@@ -128,7 +135,7 @@ class NewAudioGUI(customtkinter.CTkToplevel):
     def _setupDoneButton(self):
         #action = lambda x = 1: self.createNewAudio(x) #x=1 indicates that this is import from youtube
         self.doneButton = customtkinter.CTkButton(self.importFromTabview.tab("Import from file"), text="Done", command=self._createSound)
-        self.doneButton.grid(row=9,column =0, columnspan=2,padx=0,pady=(58,10))
+        self.doneButton.grid(row=11,column =0, columnspan=2,padx=0,pady=(30,10))
 
 #========= Audio Saving Methods ========#
 

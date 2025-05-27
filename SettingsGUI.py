@@ -10,6 +10,10 @@ class SettingsGUI(customtkinter.CTkToplevel):
         # Call Super Constructor
         super().__init__(master)
 
+        # Init Constants
+        self.WINDOW_WIDTH = 400
+        self.WINDOW_HEIGHT = 450
+
         # Init Instance Vars
         self.settingsManager = settingsManager
         self.on_close = on_close
@@ -18,12 +22,13 @@ class SettingsGUI(customtkinter.CTkToplevel):
         # Setup GUI
         self._setupWindow()
         self._setupSettingsPanel()
+        self._resizeWindow()
 
 
     def _setupWindow(self):
         '''Sets up the window that other gui components go in.'''
         # Setup
-        self.wm_iconbitmap(self.settingsManager.getAppIconPath(".ico"))
+        #self.wm_iconbitmap(self.settingsManager.getAppIconPath(".ico"))
         self.iconphoto(True,PhotoImage(file = self.settingsManager.getAppIconPath(".png")))
         self.focus()
         self.protocol("WM_DELETE_WINDOW", self._on_close) # set the function that happens when the window is closed
@@ -36,12 +41,18 @@ class SettingsGUI(customtkinter.CTkToplevel):
         # Note: this is technically a bug as the user has 10ms to fuck shit up, but idgaf
         self.after(10, self.grab_set)
 
+    def _resizeWindow(self):
+        '''Resize the window'''
+        self.geometry(f"{self.WINDOW_WIDTH}x{self.WINDOW_HEIGHT}")
+
     def _setupSettingsPanel(self):
         '''Setup where settings will be stored.'''
 
         # Setup the frame that holds all settings
-        self.settingsFrame = customtkinter.CTkFrame(self, fg_color="transparent")
-        self.settingsFrame.pack(anchor="center", padx=10, pady=10)
+        self.grid_columnconfigure(0, weight=1)
+        self.settingsFrame = customtkinter.CTkScrollableFrame(self, fg_color="transparent")
+        self.settingsFrame.pack(padx=10, pady=10, expand=True, fill="both")
+        
         
 
         # Setup Audio Device Settings
@@ -52,7 +63,7 @@ class SettingsGUI(customtkinter.CTkToplevel):
 
         # Setup the button that saves your changes
         self.doneButton = customtkinter.CTkButton(self.settingsFrame, text="Save Changes and Restart", command=self._saveAndExit)
-        self.doneButton.pack(anchor="center", pady = 15)
+        self.doneButton.pack(anchor="center", pady = 1)
 
 
     def _setupAudioDeviceSettings(self):

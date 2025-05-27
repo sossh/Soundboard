@@ -1,6 +1,6 @@
 {
  "app_title": "Sossh Soundboard",
- "assets_folder_path": "_internal/assets/",
+ "assets_folder_path": "assets/",
  "icon_path": {
   ".ico": "Rajang_Icon.ico",
   ".png": "Rajang_Icon.png"

@@ -27,7 +27,8 @@ class SoundboardGUI(customtkinter.CTk):
         # Init Constants
         self.CONFIG_FILE_PATH = configFilePath # The file that contains the data for SettingsManager.
         self.AUDIO_FILE_PATH  = soundsFilePath # The file that contains the data for SoundManager.
-        #self.AUDIO_FOLDER_PATH = "_internal/sounds/"
+        self.WINDOW_WIDTH = 1100               # Default Width of the Soundboard
+        self.WINDOW_HEIGHT = 350               # Default Height of the Soundboard
         self.BUTTON_WIDTH = 140                # The Default width of a audio button. Does not respect this as max size so dont always belive this.
         self.RIGHT_FRAME_WIDTH = 900           # The Default width of the right frame.
         self.AP_BUTTON_COLOUR = "#1f6aa5"    # The color the audio players button will be
@@ -68,6 +69,8 @@ class SoundboardGUI(customtkinter.CTk):
         # Init Hotkeys
         self._initHotkeys()
 
+        self._resizeWindow()
+
         # Check if we should display the help and anouncements window
         if(self.settingsManager.getShowMessageOnStartup()):
             WelcomeWindow(self, self.settingsManager)
@@ -82,6 +85,7 @@ class SoundboardGUI(customtkinter.CTk):
         '''Configures the main window(sets up App title/icon)'''
 
         # Create and setup the main window
+        self.geometry(f"{self.WINDOW_WIDTH}x{self.WINDOW_HEIGHT}")
         self.iconphoto(True,PhotoImage(file = self.settingsManager.getAppIconPath(".png")))
         self.title(self.settingsManager.getAppTitle())
         self.protocol("WM_DELETE_WINDOW", self._closeApp)
@@ -93,6 +97,10 @@ class SoundboardGUI(customtkinter.CTk):
         self.grid_rowconfigure(0, weight=1)     # Allow both to stretch vertically
         self.grid_columnconfigure(0, weight=0)  # Set so audioPlayerFrame, doesn't horizontally
         self.grid_columnconfigure(1, weight=1)  # Set so rightFrame takes remaining space
+
+    def _resizeWindow(self):
+        '''Resizes the window after startup is done'''
+        self.geometry(f"{self.WINDOW_WIDTH}x{self.WINDOW_HEIGHT}")
 
     def _setupAudioPlayerPanel(self):
         '''Setup the frame that contains the audio player(stuff on the left)'''
