@@ -6,7 +6,7 @@ if __name__ == "__main__":
     while (keepRunning):
         
         # Create the Soundboard
-        app = SoundboardGUI("config.json", "sounds.json")
+        app = SoundboardGUI("_internal/config.json", "_internal/sounds.json")
 
         # Start the mainloop to update gui widgets
         app.mainloop()
