@@ -24,4 +24,4 @@ Before installing this app, you must install **VB-CABLE**, which is used for rou
 2. Download the latest installer, look for a file named something like: `Sossh-Soundboard-vX.X-Setup.exe`.
 3. Once downloaded, double-click the .exe file to start the installer.
 4. Follow the on-screen install instructions.
-5.You can choose whether to create a desktop shortcut during installation.
+5. You can choose whether to create a desktop shortcut during installation.
