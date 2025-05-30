@@ -58,7 +58,7 @@ class SoundManager:
                 # If the filter matches the sounds name and the sound file actually exists
                 if((filterLower in sound["name"].lower() or 
                     filterLower == sound["border_color"].lower() or 
-                    filterLower == sound["border_color"][1:].lower()) and
+                    filterLower == sound["hover_color"][1:].lower()) and
                     self.fileExists(self.getSoundsFolderPath()+sound["filepath"])):
 
                     soundList.append(Sound(sound["name"], self.getSoundsFolderPath()+sound["filepath"], index, sound["border_color"], sound["hover_color"]))

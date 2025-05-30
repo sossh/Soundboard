@@ -76,13 +76,13 @@ class NewAudioGUI(customtkinter.CTkToplevel):
         self.fileBrowseBtn.grid(row=2, column=1,padx=0)
 
         # title widgets
-        self.fileTitleLabel = customtkinter.CTkLabel(self.importFromTabview.tab("Import from file"), text="Audio Tile:",font=('bitter',12,"bold"))
+        self.fileTitleLabel = customtkinter.CTkLabel(self.importFromTabview.tab("Import from file"), text="Audio Title:",font=('bitter',12,"bold"))
         self.fileTitleLabel.grid(row=3, columnspan=1, pady = (10,0), sticky="w")
         self.fileTitleEntry = customtkinter.CTkEntry(self.importFromTabview.tab("Import from file"), placeholder_text="Give this audio a title")
         self.fileTitleEntry.grid(row=4, column=0, padx=5, pady=(0,5), sticky="nsew")
 
         #color widgets
-        self.fileColorLabel = customtkinter.CTkLabel(self.importFromTabview.tab("Import from file"), text="Audio Button Color:",font=('bitter',12,"bold"))
+        self.fileColorLabel = customtkinter.CTkLabel(self.importFromTabview.tab("Import from file"), text="Button Color:",font=('bitter',12,"bold"))
         self.fileColorLabel.grid(row=5, columnspan=1, pady = (10,0), sticky="w")
         self.fileRedSlider = customtkinter.CTkSlider(self.importFromTabview.tab("Import from file"), command=self._updateColors,from_=0, to=255, number_of_steps=255,height=15,button_color="#FF0000",button_hover_color="#800000")
         self.fileRedSlider.set(55)

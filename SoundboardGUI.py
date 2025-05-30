@@ -32,6 +32,8 @@ class SoundboardGUI(customtkinter.CTk):
         self.BUTTON_WIDTH = 140                # The Default width of a audio button. Does not respect this as max size so dont always belive this.
         self.RIGHT_FRAME_WIDTH = 900           # The Default width of the right frame.
         self.AP_BUTTON_COLOUR = "#1f6aa5"    # The color the audio players button will be
+        self.numButtonsPerRow = 0              # The number of buttons per row currently active
+        self.oldButtonWidth = 0                # The width of buttons, needs to be dynamic because of screen sizes
 
         ## Init Settings and Sound Manager ##
         self.settingsManager = SettingsManager(self.CONFIG_FILE_PATH)
@@ -217,7 +219,7 @@ class SoundboardGUI(customtkinter.CTk):
         self.searchFrame.grid_columnconfigure(0, weight=1)
         self.searchFrame.grid_columnconfigure(1, weight=0)
         self.searchFrame.grid_columnconfigure(2, weight=0)
-        self.searchBarEntry = customtkinter.CTkEntry(self.searchFrame, placeholder_text="Audio Name", width=400)
+        self.searchBarEntry = customtkinter.CTkEntry(self.searchFrame, placeholder_text="Search Filter", width=400)
         self.searchBarEntry.grid(row=0, column=0, padx=5, pady=3, sticky="nsew")
         self.searchBarEntry.bind('<Return>', command=self._displaySounds)
         self.searchBtn = customtkinter.CTkButton(self.searchFrame, text="Go", command=self._displaySounds, width=40)
@@ -252,10 +254,14 @@ class SoundboardGUI(customtkinter.CTk):
         # Check if we need to update the layout of buttons
         self.audioScrollFrame.update_idletasks()
         currFrameWidth = self.audioScrollFrame.winfo_width()
+        
+        if(self.numButtonsPerRow != self.getNumButtonsPerRow(currFrameWidth, self.oldButtonWidth)):
+            
+            # Schedule A Resize in 100ms
+            if(not self.alreadyRedrawingSounds and self.resizeID is None):
+                self.alreadyRedrawingSounds = True
+                self.resizeID = self.after(100, self._displaySounds)
 
-        if(currFrameWidth != self.rightFrameWidth and (not self.alreadyRedrawingSounds)):
-            self.alreadyRedrawingSounds = True
-            self.resizeID = self.after(1000, self._displaySounds)
 
         # Schedule the next update
         self.update_id = self.after(self.update_interval, self.updateGUI)
@@ -467,7 +473,7 @@ class SoundboardGUI(customtkinter.CTk):
             currFrameWidth = self.audioScrollFrame.winfo_width()
 
         # Set the frames width
-        self.rightFrameWidth = currFrameWidth
+        self.oldButtonWidth = buttonWidth
 
         # Delete the old scroll frame
         self.audioScrollFrame.destroy()
@@ -477,21 +483,22 @@ class SoundboardGUI(customtkinter.CTk):
         self.audioScrollFrame.grid(row=1, column=0, sticky="nsew")
 
         # Determine the number of cols to make
-        colWidth =  max(1, currFrameWidth // (buttonWidth+10))
+        self.numButtonsPerRow = self.getNumButtonsPerRow(currFrameWidth, buttonWidth)
         
 
         filterTerm = self.searchBarEntry.get()
         soundList = self.soundManager.getSoundsFiltered(filterTerm)
         
         for i, sound in enumerate(soundList):
-            col = i%colWidth
-            row = i//colWidth
+            col = i%self.numButtonsPerRow
+            row = i//self.numButtonsPerRow
             action = lambda x = sound.getIndex(): self._loadSoundFromIndex(x)
             self.newAudioBtn = customtkinter.CTkButton(self.audioScrollFrame, command=action, width=self.BUTTON_WIDTH, text=sound.getTitle(), font=('bitter',10),fg_color="transparent",hover_color=sound.getHoverColor(), border_width=2, border_color=sound.getBorderColor())
             self.newAudioBtn.grid(row=row, column=col,padx=(5, 5),pady=(5, 5))
 
         # We are done redrawing the sounds
         self.alreadyRedrawingSounds = False
+        self.resizeID = None
 
     def _loadSoundFromIndex(self, index:int):
         '''Loads a sound into the soundboard via its index in the sound file'''
@@ -539,5 +546,7 @@ class SoundboardGUI(customtkinter.CTk):
         self.loopSwitch.deselect()
 
 
-
-        
+#============= Misc Private Methods ===============#
+    def getNumButtonsPerRow(self, currFrameWidth:int, buttonWidth:int)->int:
+        '''Returns the number of buttons that will fit on each row with given sizes'''
+        return max(1, currFrameWidth // (buttonWidth+10))
