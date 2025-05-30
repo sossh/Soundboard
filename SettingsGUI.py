@@ -17,6 +17,7 @@ class SettingsGUI(customtkinter.CTkToplevel):
         # Init Instance Vars
         self.settingsManager = settingsManager
         self.on_close = on_close
+        self.hotkeyEntryList = []
         
 
         # Setup GUI
@@ -113,16 +114,32 @@ class SettingsGUI(customtkinter.CTkToplevel):
         self.hotkeyTitleLabel = customtkinter.CTkLabel(self.hotkeyFrame, text="Hotkey Settings", font=('bitter', 15, 'bold'))
         self.hotkeyTitleLabel.grid(row=0, pady=5)
 
-        # Create stuff for editing the toggle audio hotkey
-        self.toggleHotkeyLabel = customtkinter.CTkLabel(self.hotkeyFrame, text="Input Device:",font=('bitter',12))
-        self.toggleHotkeyLabel.grid(row=1, column=0, pady = 5, padx=(0,3), sticky="nsew")
+        currRow = 1
+        hotkeys = self.settingsManager.getAllHotkeys()
+        for hotkeyType in hotkeys.keys():
 
-        self.toggleHotkeyEntry = customtkinter.CTkEntry(self.hotkeyFrame, placeholder_text="Enter a key or its name.", width=150)
-        self.toggleHotkeyEntry.grid(row=1, column=1, padx=5, pady=3, sticky="nsew")
-        key = self.settingsManager.getHotkey("toggleAudio")
-        if(key is None):
-            key = ""
-        self.toggleHotkeyEntry.insert(0, key)
+            # Create stuff for editing the toggle audio hotkey
+            toggleHotkeyLabel = customtkinter.CTkLabel(self.hotkeyFrame, text=f"{hotkeyType} Hotkey:",font=('bitter',12))
+            toggleHotkeyLabel.grid(row=currRow, column=0, pady = 5, padx=(0,3), sticky="w")
+
+            # Create the entry that hold the key
+            toggleHotkeyEntry = customtkinter.CTkEntry(self.hotkeyFrame, placeholder_text="Enter a key or its name.", width=150)
+            toggleHotkeyEntry.grid(row=currRow, column=1, padx=5, pady=3, sticky="nsew")
+            key = hotkeys[hotkeyType]
+            if(key is None):
+                key = ""
+            toggleHotkeyEntry.insert(0, key)
+
+            # Add the hotkey to the list so it can be accessed later
+            self.hotkeyEntryList.append(toggleHotkeyEntry)
+
+            # Move to the next row
+            currRow +=1
+
+
+
+
+
 
 
 
@@ -143,10 +160,18 @@ class SettingsGUI(customtkinter.CTkToplevel):
         # Get and Set virtual device
         self.settingsManager.setVirtualDeviceName(self.virtualDeviceOptionMenu.get())
 
-        # Get the hotkey for toggling audio and set if it is valid
-        newKey = self.toggleHotkeyEntry.get()
-        if((HotkeyManager.isValidKey(newKey) or newKey=="") and newKey != self.settingsManager.getHotkey("toggleAudio")):
-            self.settingsManager.setHotkey("toggleAudio", newKey)
+
+        # Get all hotkeys and set them in order
+        hotkeys = self.settingsManager.getAllHotkeys()
+        for keyEntry, hotkeyType in zip(self.hotkeyEntryList, hotkeys.keys()):
+
+            # Get the key in this hotkeys entry
+            newKey = keyEntry.get()
+
+            # If the key is valid then set it
+            if((HotkeyManager.isValidKey(newKey) or newKey=="") and newKey != hotkeys[hotkeyType]):
+                self.settingsManager.setHotkey(hotkeyType, newKey)
+
 
         # Restart the soundboard
         self._on_close(restart=True)

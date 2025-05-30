@@ -68,10 +68,19 @@ class SettingsManager():
         with open(self.SETTINGS_FILE_PATH, "r") as f:
             return json.load(f)["hotkeys"][type]
         
+    def getAllHotkeys(self)->dict:
+        '''Returns a list of all hotkeys in form {"hotkeyType":"key to use"}'''
+        with open(self.SETTINGS_FILE_PATH, "r") as f:
+            return dict(json.load(f)["hotkeys"])
+        
     def getImagePath(self, imageName)->str:
         '''Returns the path to an image stored in the assets folder'''
+        return self.ASSETS_FOLDER_PATH + imageName
+        
+    def getMaxVolume(self)->str:
+        '''Returns the max volume set in the config file'''
         with open(self.SETTINGS_FILE_PATH, "r") as f:
-            return self.ASSETS_FOLDER_PATH + imageName
+            return json.load(f)["maxVolume"]
         
     
     

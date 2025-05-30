@@ -1,11 +1,12 @@
 {
  "app_title": "Sossh Soundboard",
  "assets_folder_path": "assets/",
+ "maxVolume": 1,
  "icon_path": {
   ".ico": "Rajang_Icon.ico",
   ".png": "Rajang_Icon.png"
  },
- "showWelcomeMessageOnStart": true,
+ "showWelcomeMessageOnStart": false,
  "welcome_messages": [
   {
    "image_path": "messages/Welcome.png",
@@ -27,6 +28,8 @@
  "output_device": "default",
  "virtual_device": "default",
  "hotkeys": {
-  "toggleAudio": "`"
+  "Toggle Audio": "`",
+  "Volume Up": "up",
+  "Volume Down": "down"
  }
 }

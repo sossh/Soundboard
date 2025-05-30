@@ -31,6 +31,7 @@ class SoundboardGUI(customtkinter.CTk):
         self.WINDOW_HEIGHT = 350               # Default Height of the Soundboard
         self.BUTTON_WIDTH = 140                # The Default width of a audio button. Does not respect this as max size so dont always belive this.
         self.RIGHT_FRAME_WIDTH = 900           # The Default width of the right frame.
+        self.HOTKEY_VOLUME_CHNAGE_AMOUNT = 5   # The % Amount the hotky will change the volume by.
         self.AP_BUTTON_COLOUR = "#1f6aa5"    # The color the audio players button will be
         self.numButtonsPerRow = 0              # The number of buttons per row currently active
         self.oldButtonWidth = 0                # The width of buttons, needs to be dynamic because of screen sizes
@@ -49,9 +50,10 @@ class SoundboardGUI(customtkinter.CTk):
         self.soundPlayer = Soundboard(self.inputDevice, self.outputDevice, self.virtualDevice)
         
         ## Init Data Instance Variables(settings) ##
-        self.restartOnClose = False         # True if the program should restart when its closed.
-        self.updateSliderPosition = True    # Stops slider from moving when user it moving it.
-        self.alreadyRedrawingSounds = False # Used to stop a redraw when we already are doing it.
+        self.restartOnClose = False                          # True if the program should restart when its closed.
+        self.updateSliderPosition = True                     # Stops slider from moving when user it moving it.
+        self.alreadyRedrawingSounds = False                  # Used to stop a redraw when we already are doing it.
+        self.maxVolume = self.settingsManager.getMaxVolume() # The maximum volume multiplier that the user can set
 
 
         ## Init GUI Elements ##
@@ -146,7 +148,7 @@ class SoundboardGUI(customtkinter.CTk):
         self.volumeIconImage = customtkinter.CTkImage(light_image=Image.open(self.settingsManager.getImagePath("volume.PNG")),dark_image=Image.open(self.settingsManager.getImagePath("volume.PNG")),size=(30, 30))
         self.volumeIconLabel = customtkinter.CTkLabel(self.volumeFrame, image=self.volumeIconImage, text="")
         self.volumeIconLabel.grid(row=0, column=0, padx=(10, 0), sticky="nsew")
-        self.volumeSlider = customtkinter.CTkSlider(self.volumeFrame, from_=0, to=1, number_of_steps=100)
+        self.volumeSlider = customtkinter.CTkSlider(self.volumeFrame, from_=0, to=self.maxVolume, number_of_steps=100)
         self.volumeSlider.set(1)
         self.volumeSlider.bind("<ButtonRelease-1>", self._setAudioVolume)
         self.volumeSlider.grid(row=0, column=1, padx=(10, 10), pady=(10, 5), sticky="nsew")
@@ -309,8 +311,10 @@ class SoundboardGUI(customtkinter.CTk):
         '''Inits hotkeys with the SettingsManager and adds them to the HotkeyManager'''
 
         # Init the hotkey for toggling Audio
-        self.hotkeyManager.addHotkey(self.settingsManager.getHotkey("toggleAudio"), self._toggleAudio)
+        self.hotkeyManager.addHotkey(self.settingsManager.getHotkey("Toggle Audio"), self._toggleAudio)
 
+        # Init the hotkey Increasing Volume
+        self.hotkeyManager.addHotkey(self.settingsManager.getHotkey("Volume Up"), self._volumeUp)
 
         # Start activate all hotkeys
         self.hotkeyManager.activateHotkeys()
@@ -327,6 +331,25 @@ class SoundboardGUI(customtkinter.CTk):
     
         # Toggle the audio
         self.soundPlayer.toggleSound()
+
+    def _volumeUp(self):
+        '''Increases Volulme by HOTKEY_VOLUME_CHNAGE_AMOUNT points'''
+        # Check if audio is currently playing
+        isActive = self.soundPlayer.isActive()
+
+        # Stops the audio from playing
+        self.soundPlayer.stopSound()
+
+        # Get the volume to set the audio to, and set it
+        vol = self.volumeSlider.get()
+        vol += vol*(self.HOTKEY_VOLUME_CHNAGE_AMOUNT/100)
+        self.volumeSlider.set(vol)
+        self.soundPlayer.setVolume(vol)
+
+        # Restart the audio if it was playing
+        if(isActive):
+            self.soundPlayer.playSound()
+
 
     def _editSliderPosition(self, pos):
         '''Stops updateGUI() from changing the sliders position while the user is editing it'''
