@@ -82,6 +82,11 @@ class SettingsManager():
         with open(self.SETTINGS_FILE_PATH, "r") as f:
             return json.load(f)["maxVolume"]
         
+    def getDeleteMessage(self)->str:
+        '''Returns the message that displays when the user tries to delete an audio'''
+        with open(self.SETTINGS_FILE_PATH, "r") as f:
+            return json.load(f)["deletePopupMessage"]
+        
     
     
             

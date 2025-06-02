@@ -14,7 +14,7 @@ from EditAudioGUI import EditAudioGUI
 from SettingsGUI import SettingsGUI
 from WelcomeWindow import WelcomeWindow
 from MessageWindow import MessageWindow
-
+from ConfirmationWindow import ConfirmationWindow
 
 
 customtkinter.set_appearance_mode("dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -50,10 +50,11 @@ class SoundboardGUI(customtkinter.CTk):
         self.soundPlayer = Soundboard(self.inputDevice, self.outputDevice, self.virtualDevice)
         
         ## Init Data Instance Variables(settings) ##
-        self.restartOnClose = False                          # True if the program should restart when its closed.
-        self.updateSliderPosition = True                     # Stops slider from moving when user it moving it.
-        self.alreadyRedrawingSounds = False                  # Used to stop a redraw when we already are doing it.
-        self.maxVolume = self.settingsManager.getMaxVolume() # The maximum volume multiplier that the user can set
+        self.restartOnClose = False                                       # True if the program should restart when its closed.
+        self.updateSliderPosition = True                                  # Stops slider from moving when user it moving it.
+        self.alreadyRedrawingSounds = False                               # Used to stop a redraw when we already are doing it.
+        self.maxVolume = self.settingsManager.getMaxVolume()              # The maximum volume multiplier that the user can set
+        
 
 
         ## Init GUI Elements ##
@@ -174,7 +175,7 @@ class SoundboardGUI(customtkinter.CTk):
         self.deleteImage = customtkinter.CTkImage(light_image=Image.open(self.settingsManager.getImagePath("trash.PNG")),dark_image=Image.open(self.settingsManager.getImagePath("trash.PNG")),size=(30, 30))
         self.deleteIconLabel = customtkinter.CTkLabel(self.deleteButtonFrame, image=self.deleteImage, text="")
         self.deleteIconLabel.grid(row=0, column=0,padx=(10, 0),pady=(5, 5))
-        self.deleteBtn = customtkinter.CTkButton(self.deleteButtonFrame, text="Delete", command=self._deleteAudio,width=70,fg_color="transparent",border_width=2, border_color=self.AP_BUTTON_COLOUR)
+        self.deleteBtn = customtkinter.CTkButton(self.deleteButtonFrame, text="Delete", command=self._openDeletePopup,width=70,fg_color="transparent",border_width=2, border_color=self.AP_BUTTON_COLOUR)
         self.deleteBtn.grid(row=0, column=1,padx=(10, 10),pady=(5, 5))
 
         # Create the Edit button
@@ -316,6 +317,9 @@ class SoundboardGUI(customtkinter.CTk):
         # Init the hotkey Increasing Volume
         self.hotkeyManager.addHotkey(self.settingsManager.getHotkey("Volume Up"), self._volumeUp)
 
+        # Init the hotkey Increasing Volume
+        self.hotkeyManager.addHotkey(self.settingsManager.getHotkey("Volume Down"), self._volumeDown)
+
         # Start activate all hotkeys
         self.hotkeyManager.activateHotkeys()
 
@@ -335,20 +339,53 @@ class SoundboardGUI(customtkinter.CTk):
     def _volumeUp(self):
         '''Increases Volulme by HOTKEY_VOLUME_CHNAGE_AMOUNT points'''
         # Check if audio is currently playing
-        isActive = self.soundPlayer.isActive()
-
-        # Stops the audio from playing
-        self.soundPlayer.stopSound()
-
-        # Get the volume to set the audio to, and set it
-        vol = self.volumeSlider.get()
-        vol += vol*(self.HOTKEY_VOLUME_CHNAGE_AMOUNT/100)
-        self.volumeSlider.set(vol)
-        self.soundPlayer.setVolume(vol)
+        isLoaded = self.soundPlayer.isSoundLoaded()
 
         # Restart the audio if it was playing
-        if(isActive):
-            self.soundPlayer.playSound()
+        if(isLoaded):
+            # Get the volume to set the audio to
+            vol = self.volumeSlider.get()
+
+            # Increase volume by a precentage
+            vol += self.volumeSlider.cget("to")*(self.HOTKEY_VOLUME_CHNAGE_AMOUNT/100)
+
+            # Set the volume if valid
+           
+
+            if(vol>self.maxVolume):
+                self.volumeSlider.set(self.maxVolume)
+                self.soundPlayer.setVolume(self.maxVolume)
+            elif(vol<0):
+                self.volumeSlider.set(0)
+                self.soundPlayer.setVolume(0)
+            else:
+                self.volumeSlider.set(vol)
+                self.soundPlayer.setVolume(vol)
+
+    def _volumeDown(self):
+        '''Increases Volulme by HOTKEY_VOLUME_CHNAGE_AMOUNT points'''
+        # Check if audio is currently playing
+        isLoaded = self.soundPlayer.isSoundLoaded()
+
+        # Restart the audio if it was playing
+        if(isLoaded):
+            # Get the volume to set the audio to
+            vol = self.volumeSlider.get()
+
+            # Decrease volume by a precentage
+            vol -= self.volumeSlider.cget("to")*(self.HOTKEY_VOLUME_CHNAGE_AMOUNT/100)
+
+            # Set the volume if valid
+            if(vol<0):
+                self.volumeSlider.set(0)
+                self.soundPlayer.setVolume(0)
+            elif(vol>self.maxVolume):
+                self.volumeSlider.set(self.maxVolume)
+                self.soundPlayer.setVolume(self.maxVolume)           
+            else:
+                self.volumeSlider.set(vol)
+                self.soundPlayer.setVolume(vol)
+
 
 
     def _editSliderPosition(self, pos):
@@ -379,19 +416,12 @@ class SoundboardGUI(customtkinter.CTk):
     def _setAudioVolume(self, event):
         '''Sets the audio volume to the position of the volume slider.'''
 
-        # Check if audio is currently playing
-        isActive = self.soundPlayer.isActive()
+        if(self.soundPlayer.isSoundLoaded()):
 
-        # Stops the audio from playing
-        self.soundPlayer.stopSound()
+            # Get the volume to set the audio to, and set it
+            vol = self.volumeSlider.get()
+            self.soundPlayer.setVolume(vol)
 
-        # Get the volume to set the audio to, and set it
-        vol = self.volumeSlider.get()
-        self.soundPlayer.setVolume(vol)
-
-         # Restart the audio if it was playing
-        if(isActive):
-            self.soundPlayer.playSound()
 
     def _setLoop(self):
         '''Enable looping for the soundboard.'''
@@ -403,6 +433,22 @@ class SoundboardGUI(customtkinter.CTk):
         # If the switch is set to on then loop audio
         loop = self.loopSwitch.get() == "on"
         self.soundPlayer.setLooping(loop)
+
+    def _openDeletePopup(self):
+        '''Asks the user if they really want to delete the sound in the soundboard.'''
+
+        # Only open if a sound is loaded
+        if(self.soundPlayer.isSoundLoaded()):
+
+            # Stop the audio from from playing
+            self.soundPlayer.stopSound()
+
+            # Get the message to be displayed
+            deletePopupMessage = self.settingsManager.getDeleteMessage()
+
+            # Open the confirmation window
+            ConfirmationWindow(self, deletePopupMessage, on_confirm=self._deleteAudio)
+
     
     def _deleteAudio(self):
         '''Delete the currend audio loaded in the sound player.'''
@@ -466,15 +512,6 @@ class SoundboardGUI(customtkinter.CTk):
         # Open the window
         WelcomeWindow(self, self.settingsManager)
     
-
-        
-
-        
-
-
-
-
-
 
 
 #======================= Sound Management Methods =========================#

@@ -6,7 +6,7 @@
   ".ico": "Rajang_Icon.ico",
   ".png": "Rajang_Icon.png"
  },
- "showWelcomeMessageOnStart": false,
+ "showWelcomeMessageOnStart": true,
  "welcome_messages": [
   {
    "image_path": "messages/Welcome.png",
@@ -24,6 +24,7 @@
    "message": "The soundboard currently supports .wav files only (for now).\nYou can find sounds at websites like:\n  - yout.com (for YouTube)\n  - freesound.org"
   }
  ],
+ "deletePopupMessage": "Are you sure you want to delete this sound?",
  "input_device": "default",
  "output_device": "default",
  "virtual_device": "default",
