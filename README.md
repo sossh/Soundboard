@@ -10,7 +10,7 @@ A desktop soundboard app that lets you play .wav audio clips through your microp
 Before installing this app, you must install **VB-CABLE**, which is used for routing audio.
 
 1. Visit the official VB-CABLE website: [**VB-CABLE Download Page**](https://www.vb-audio.com/Cable/)
-2. Download the "New Package" of the **VB-CABLE Driver**.
+2. Download the "Old Package" of the **VB-CABLE Driver** (Note: the old package is just simpler for install).
 3. Extract the downloaded `.zip` file.
 4. Right-click the installer `VBCABLE_Setup.exe` and select **Run as Administrator**.
 5. Follow the on-screen instructions to complete installation.
@@ -18,7 +18,7 @@ Before installing this app, you must install **VB-CABLE**, which is used for rou
 
 ---
 
-### 2. Download and Install This App
+### 2. Download and Install This Apps Installer
 
 1. Navigate to the Releases page on the right side of the repository page. Or click here [**Releases**](https://github.com/sossh/Soundboard/releases).
 2. Download the latest installer, look for a file named something like: `Sossh-Soundboard-vX.X-Setup.exe`.
